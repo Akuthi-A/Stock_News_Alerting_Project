@@ -1,9 +1,10 @@
+import os
 import requests
 from twilio.rest import Client
 
 # these are acquired from my free twilio account
-account_sid = "ACea0b1e9a06791b257831903522b3e6b8"
-auth_token = "9f78c1978a074cdd8b53921db7e44182"
+account_sid = os.environ.get("TWILIO_ACC_SID")   # "ACea0b1e9a06791b257831903522b3e6b8"
+auth_token =  os.environ.get("TWILIO_AUTH_TOKEN")        # "9f78c1978a074cdd8b53921db7e44182"
 
 # For STOCK_NAME any stock name can be passed as defined by the stock market
 # for this program I will demo this program using the TSLA stock(Tesla stock)
@@ -14,14 +15,14 @@ COMPANY_NAME = "Tesla Inc"
 STOCK_ENDPOINT = "https://www.alphavantage.co/query"
 NEWS_ENDPOINT = "https://newsapi.org/v2/everything"
 
-NEWS_API_KEY = "3ece353fa14e40dda11b5db5a893f993"
+NEWS_API_KEY = os.environ.get("NEWS_API_KEY")  # "3ece353fa14e40dda11b5db5a893f993"
 news_parameters = {
     "apiKey": NEWS_API_KEY,
     "qInTitle": COMPANY_NAME,
     "language": "en"
 }
 
-STOCK_API_KEY = "278AI9O0DUFZOTJH"
+STOCK_API_KEY = os.environ.get("STOCK_API_KEY") # "278AI9O0DUFZOTJH"
 stock_parameters = {
     "function": "TIME_SERIES_DAILY",
     "symbol": STOCK_NAME,
@@ -50,7 +51,7 @@ if (yesterday_close - day_before_close) < 0:
     indicator = "🔻"
 # Send three news article(get data from news api) related to the stock if there's a large fluctuation(5%)
 # in the stock price (percentage_difference > 5)
-if percentage_difference > 1:
+if percentage_difference > 5:
     response = requests.get(url=NEWS_ENDPOINT, params=news_parameters)
     response.raise_for_status()
     news_data = response.json()["articles"][:3]
